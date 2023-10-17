@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { map } from 'rxjs/internal/operators/map';
 import { User } from '../_models/user';
 import { BehaviorSubject } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,7 @@ import { BehaviorSubject } from 'rxjs';
 //in other words, a service helps us store state
 
 export class AccountService {
-  baseUrl = 'https://localhost:5001/api/';
+  baseUrl = environment.apiUrl;
   //create behaviorsubject of type user or null union type with default value null
   private currentUserSource = new BehaviorSubject<User | null>(null);
   // $ convention to indicate observable

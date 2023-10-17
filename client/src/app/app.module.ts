@@ -47,6 +47,7 @@ import { ServerErrorComponent } from './errors/server-error/server-error.compone
   ],
   providers: [
     //add this to our HTTP_INTERCEPTORS, multi true so as to not replace
+    //this serves as middleware
     {provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true}
   ],
   bootstrap: [AppComponent]
