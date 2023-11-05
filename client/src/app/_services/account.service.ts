@@ -40,7 +40,7 @@ export class AccountService {
   register(model: any){
     return this.http.post<User>(this.baseUrl + 'account/register', model).pipe(
       //so what happens here is we take the return from the http post 
-      //and handle it before even returning it.
+      //and process it before even returning it.
       map(user => {
         if (user) {
           localStorage.setItem('user', JSON.stringify(user));

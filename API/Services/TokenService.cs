@@ -24,7 +24,7 @@ namespace API.Services
             var claims = new List<Claim>
             {
                 new Claim(JwtRegisteredClaimNames.NameId, user.UserName)
-            }; //User is claiming to be someone
+            }; //We don't check if the claim is true here. Must authenticate elsewhere.
 
             //Create encoded version of key
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);
