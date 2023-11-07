@@ -71,7 +71,7 @@ namespace API.Data
 
         public void Update(AppUser user)
         {
-            //informing ef that entity has bene updated. Ef automatically does this though.
+            //informing ef that entity has been updated. Ef automatically does this though.
             _context.Entry(user).State = EntityState.Modified;
         }
     }
