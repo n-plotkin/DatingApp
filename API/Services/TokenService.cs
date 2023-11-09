@@ -23,7 +23,9 @@ namespace API.Services
         {
             var claims = new List<Claim>
             {
-                new Claim(JwtRegisteredClaimNames.NameId, user.UserName)
+                new Claim(JwtRegisteredClaimNames.NameId, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
+
             }; //We don't check if the claim is true here. Must authenticate elsewhere.
 
             //Create encoded version of key

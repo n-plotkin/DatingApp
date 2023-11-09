@@ -18,7 +18,6 @@ namespace API.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-
         private readonly IPhotoService _photoService;
 
         public UsersController(IUserRepository userRepository, IMapper mapper,
@@ -35,6 +34,12 @@ namespace API.Controllers
         //route is http:url./users/
         public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery]UserParams userParams)
         {
+            var currentUser = await _userRepository.GetUserByUsernameAsync(User.GetUsername());
+
+            userParams.CurentUsername = currentUser.UserName;
+
+            userParams.Gender = currentUser.Gender == "male" ? "female" : "male";
+
             var users = await _userRepository.GetMembersAsync(userParams);
 
             Response.AddPaginationHeader(new PaginationHeader(users.CurrentPage, users.PageSize, 

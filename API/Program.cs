@@ -23,8 +23,8 @@ app.UseMiddleware<ExceptionMiddleware>();
 app.UseCors(builder => builder.AllowAnyHeader().AllowAnyMethod()
     .WithOrigins("https://localhost:4200"));
 
-//middleware, authentification first authorization second
 
+//middleware, authentification first authorization second
 //Authentification checks if the token is valid
 app.UseAuthentication();
 //Authorization checks what permissions the authentificaton has
