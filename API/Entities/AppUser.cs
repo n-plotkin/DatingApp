@@ -29,6 +29,10 @@ namespace API.Entities
         public List<UserLike> LikedByUsers { get; set; }
         public List<UserLike> LikedUsers { get; set; }
 
+        public List<Message> MessagesSent { get; set; }
+        public List<Message> MessagesRecieved { get; set; }
+
+
         
         //automapper knows that GetAge here can map to Age in memberDto
         // public int GetAge()
