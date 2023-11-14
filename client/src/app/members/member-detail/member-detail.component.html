@@ -1,4 +1,4 @@
-<div class="row" *ngIf="member">
+<div class="row">
     <div class="col-4">
         <div class="card">
             <img src="{{member.photoUrl || './assets/user.png'}}" alt="{{member.knownAs}}"
@@ -13,43 +13,39 @@
                     <p>{{member.age}}</p>
                 </div>
                 <div>
-                    <strong>Last Active:</strong>
+                    <strong>Last active:</strong> 
                     <p>{{member.lastActive + 'Z' | timeago}}</p>
                 </div>
                 <div>
-                    <strong>Member Since::</strong>
-                    <p>{{member.created | date: "longDate"}}</p>
+                    <strong>Member since:</strong>
+                    <p>{{member.created | date:'dd MMM yyyy'}}</p>
                 </div>
             </div>
-        <div class="card-footer">
+            <div class="card-footer">
                 <div class="btn-group d-flex">
                     <button class="btn btn-primary">Like</button>
-                    <button class="btn btn-success">Messages</button>
+                    <button (click)="selectTab('Messages')" class="btn btn-success">Message</button>
                 </div>
             </div>
         </div>
     </div>
-
     <div class="col-8">
-        <tabset class="member-tabset">
-            <tab heading="About {{member.knownAs}}">
-                <p></p>
+        <tabset class="member-tabset" #memberTabs>
+            <tab heading="About {{member.knownAs}}" (selectTab)="onTabActivated($event)">
                 <h4>Description</h4>
                 <p>{{member.introduction}}</p>
-                <h4>Looking for:</h4>
+                <h4>Looking for</h4>
                 <p>{{member.lookingFor}}</p>
             </tab>
-            <tab heading="Interests">
-                <p></p>
+            <tab heading="Interests" (selectTab)="onTabActivated($event)">
                 <h4>Interests</h4>
                 <p>{{member.interests}}</p>
             </tab>
-            <tab heading="Photos" #photoTab="tab" class="gallery">
-                <gallery *ngIf="photoTab.active" [items]="images"></gallery>
+            <tab heading="Photos" #photoTab="tab" (selectTab)="onTabActivated($event)">
+                <gallery *ngIf="photoTab.active" [items]="images" class="gallery"></gallery>
             </tab>
-            <tab heading="Messages">
-                <p></p>
-                <p>Messages go here...</p>
+            <tab heading="Messages" (selectTab)="onTabActivated($event)">
+                <app-member-messages [username]="member.userName" [messages]="messages"></app-member-messages>
             </tab>
         </tabset>
     </div>
