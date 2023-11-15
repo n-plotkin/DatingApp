@@ -3,6 +3,7 @@ using System.Security.Claims;
 using System.Text;
 using API.Entities;
 using API.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 
 namespace API.Services
@@ -15,11 +16,13 @@ namespace API.Services
             //This is how it works in HTTPS and SSL
         //Here, our client doesn't need to decrypt their key
         private readonly SymmetricSecurityKey _key;
-        public TokenService(IConfiguration config)
+        private readonly UserManager<AppUser> _userManager;
+        public TokenService(IConfiguration config, UserManager<AppUser> userManager)
         {
+            _userManager = userManager;
             _key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["TokenKey"]));
         }
-        public string CreateToken(AppUser user)
+        public async Task<string> CreateToken(AppUser user)
         {
             var claims = new List<Claim>
             {
@@ -27,6 +30,10 @@ namespace API.Services
                 new Claim(JwtRegisteredClaimNames.UniqueName, user.UserName)
 
             }; //We don't check if the claim is true here. Must authenticate elsewhere.
+            
+            var roles = await _userManager.GetRolesAsync(user);
+            //for the claims, add elements that for each role, project it to a new claim.
+            claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
             //Create encoded version of key
             var creds = new SigningCredentials(_key, SecurityAlgorithms.HmacSha512Signature);

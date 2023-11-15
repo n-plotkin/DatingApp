@@ -38,25 +38,6 @@
         ]
     },
     {
-        "UserName": "Lucinda",
-        "Gender": "female",
-        "DateOfBirth": "1985-10-08",
-        "KnownAs": "Lucinda",
-        "Created": "2023-11-01",
-        "LastActive": "2023-11-01",
-        "Introduction": "Ullamco qui dolore cupidatat laboris nulla Lorem. Veniam eiusmod non anim in cupidatat amet. Minim nulla elit qui cupidatat eu.\r\n",
-        "LookingFor": "Exercitation aliquip aliqua labore do magna aliqua. Dolore ad sit ullamco fugiat aliquip minim sunt cupidatat proident. Excepteur in nisi esse nulla qui pariatur aliqua ullamco enim commodo. Velit duis laboris nisi aliqua quis sint ad pariatur minim fugiat.\r\n",
-        "Interests": "Quis anim qui tempor amet incididunt magna est elit.",
-        "City": "Bainbridge",
-        "Country": "Barbados",
-        "Photos": [
-            {
-                "Url": "https://randomuser.me/api/portraits/women/20.jpg",
-                "IsMain": true
-            }
-        ]
-    },
-    {
         "UserName": "Patti",
         "Gender": "female",
         "DateOfBirth": "1991-08-21",

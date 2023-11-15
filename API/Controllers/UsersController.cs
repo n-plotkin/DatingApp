@@ -30,6 +30,7 @@ namespace API.Controllers
 
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet] //http get + route is our request
         //route is http:url./users/
         public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery]UserParams userParams)
@@ -47,6 +48,7 @@ namespace API.Controllers
             return Ok(users);
         }
 
+        [Authorize(Roles = "Member")]
         [HttpGet("{username}")] //put username in curly brackets to idicate flexibility,
         // route is route + {username}
         public async Task<ActionResult<MemberDto>> GetUser(string username)
