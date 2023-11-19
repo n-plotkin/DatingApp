@@ -4,6 +4,7 @@ import { map } from 'rxjs/internal/operators/map';
 import { User } from '../_models/user';
 import { BehaviorSubject, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { PresenceService } from './presence.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class AccountService {
   // $ convention to indicate observable
   currentUser$ = this.currentUserSource.asObservable();
 
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient, private presenceService: PresenceService) { 
   }
 
   login(model: any){
@@ -55,11 +56,15 @@ export class AccountService {
     user.roles = Array.isArray(roles) ? roles : [roles];
     localStorage.setItem('user', JSON.stringify(user));
     this.currentUserSource.next(user);
+
+    this.presenceService.createHubConnection(user);
   }
 
   logout(){
     localStorage.removeItem('user');
     this.currentUserSource.next(null);
+
+    this.presenceService.stopHubConnection();
   }
 
   getDecodedToken(token: string) {

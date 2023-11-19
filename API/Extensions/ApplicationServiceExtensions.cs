@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using API.Services;
 using API.Interfaces;
 using API.Helpers;
+using API.SignalR;
 
 namespace API.Extensions
 {
@@ -27,6 +28,9 @@ namespace API.Extensions
             services.AddScoped<LogUserActivity>();
             services.AddScoped<ILikesRepository, LikesRepository>();
             services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddSignalR();
+            //we want the onlineusers service to be the same service, available to everyone, so singleton.
+            services.AddSingleton<PresenceTracker>();
 
             return services;
         }
