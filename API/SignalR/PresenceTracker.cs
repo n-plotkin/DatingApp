@@ -10,8 +10,9 @@ namespace API.SignalR
         private static readonly Dictionary<string, List<string>> OnlineUsers =
             new Dictionary<string, List<string>>();
 
-        public Task UserConnected(string username, string connectionid)
+        public Task<bool> UserConnected(string username, string connectionid)
         {
+            bool isOnlineChanged = false;
             //dictionary is not threadsafe, so multiple concurrent accesses would be bad
             lock(OnlineUsers)
             {
@@ -22,26 +23,29 @@ namespace API.SignalR
                 else
                 {
                     OnlineUsers.Add(username, new List<string>{connectionid});
+                    isOnlineChanged = true;
                 }
             }
 
-            return Task.CompletedTask;
+            return Task.FromResult(isOnlineChanged);
         }
 
-        public Task UserDisconnected(string username, string connectionid)
+        public Task<bool> UserDisconnected(string username, string connectionid)
         {
+            bool isOfflineChanged = false;
             lock(OnlineUsers)
             {
-                if (!OnlineUsers.ContainsKey(username)) return Task.CompletedTask;
+                if (!OnlineUsers.ContainsKey(username)) return Task.FromResult(isOfflineChanged);
 
                 OnlineUsers[username].Remove(connectionid);
 
                 if (OnlineUsers[username].Count == 0)
                 {
                     OnlineUsers.Remove(username);
+                    isOfflineChanged = true;
                 }
 
-                return Task.CompletedTask;
+                return Task.FromResult(isOfflineChanged);
             }
         }
         public Task<string[]> GetOnlineUsers()
@@ -53,6 +57,19 @@ namespace API.SignalR
             }
 
             return Task.FromResult(onlineUsers);
+        }
+
+        public static Task<List<string>> GetConnectionsForUser(string username)
+        {
+            List<string> connectionIds;
+
+            //To make this scalable we will have to turn this into database rather than our dictionary in memory
+            lock (OnlineUsers)
+            {
+                connectionIds = OnlineUsers.GetValueOrDefault(username);
+            }
+
+            return Task.FromResult(connectionIds);
         }
     }
 }
