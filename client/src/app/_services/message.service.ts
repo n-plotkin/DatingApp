@@ -18,6 +18,9 @@ export class MessageService {
   private messageThreadSource = new BehaviorSubject<Message[]>([]);
   messageThread$ = this.messageThreadSource.asObservable();
 
+
+  constructor(private http: HttpClient) { }
+
   createHubConnection(user: User, otherUsername: string) {
     this.hubConnection = new HubConnectionBuilder()
       .withUrl(this.hubUrl + 'message?user=' + otherUsername, {
@@ -63,8 +66,6 @@ export class MessageService {
       this.hubConnection.stop();
     }
   }
-
-  constructor(private http: HttpClient) { }
 
   getMessages(pageNumber: number, pageSize: number, container: string) {
     let params = getPaginationHeaders(pageNumber, pageSize);

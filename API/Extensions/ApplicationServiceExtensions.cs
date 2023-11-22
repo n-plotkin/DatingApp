@@ -23,12 +23,17 @@ namespace API.Extensions
             services.AddScoped<ITokenService, TokenService>();
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.Configure<CloudinarySettings>(config.GetSection("CloudinarySettings"));
+            services.Configure<SpotifySettings>(config.GetSection("SpotifySettings"));
             services.AddScoped<IPhotoService, PhotoService>();
             services.AddScoped<LogUserActivity>();
             services.AddSignalR();
             //we want the onlineusers service to be the same service, available to everyone, so singleton.
             services.AddSingleton<PresenceTracker>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddHttpClient<ISpotifyAccountService, SpotifyAccountService>(c =>
+                c.BaseAddress = new Uri("https://accounts.spotify.com/api/"));
+
+
 
             return services;
         }

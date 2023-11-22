@@ -42,12 +42,22 @@ namespace API.Data
                 .IsRequired();
 
 
+            builder.Entity<AppUser>()
+                .HasOne(au => au.UserSpotifyData) // AppUser has one SpotifyData
+                .WithOne(sd => sd.SpotifyDataUser) // SpotifyData has one AppUser
+                .HasForeignKey<SpotifyData>(sd => sd.AppUserId); // Specify the foreign key in SpotifyData
+
+
 
 
             //HasKey passes a UserLike instance k
             //The lambda returns a composite key of k's properties
             builder.Entity<UserLike>()
-                .HasKey(k => new { k.SourceUserId, k.TargetUserId });
+                    .HasKey(k => new
+                    {
+                        k.SourceUserId,
+                        k.TargetUserId
+                    });
 
             //meaning each SourceUser in a UserLike has many liked users
             builder.Entity<UserLike>()
@@ -58,22 +68,22 @@ namespace API.Data
 
             //Meaning each TargetUser in a UserLike has many LikedByUsers
             builder.Entity<UserLike>()
-                .HasOne(s => s.TargetUser)
-                .WithMany(l => l.LikedByUsers)
-                .HasForeignKey(s => s.TargetUserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                        .HasOne(s => s.TargetUser)
+                        .WithMany(l => l.LikedByUsers)
+                        .HasForeignKey(s => s.TargetUserId)
+                        .OnDelete(DeleteBehavior.Cascade);
 
 
 
             builder.Entity<Message>()
-                .HasOne(m => m.Recipient)
-                .WithMany(u => u.MessagesReceived)
-                .OnDelete(DeleteBehavior.Restrict);
+                        .HasOne(m => m.Recipient)
+                        .WithMany(u => u.MessagesReceived)
+                        .OnDelete(DeleteBehavior.Restrict);
 
             builder.Entity<Message>()
-                .HasOne(m => m.Sender)
-                .WithMany(u => u.MessagesSent)
-                .OnDelete(DeleteBehavior.Restrict);
+                        .HasOne(m => m.Sender)
+                        .WithMany(u => u.MessagesSent)
+                        .OnDelete(DeleteBehavior.Restrict);
 
         }
     }

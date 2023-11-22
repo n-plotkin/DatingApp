@@ -35,6 +35,7 @@ import { RolesModalComponent } from './modals/roles-modal/roles-modal.component'
 import { RouteReuseStrategy } from '@angular/router';
 import { CustomRouteReuseStrategy } from './_services/custom-route-reuse-strategy.service';
 import { ConfirmDialogComponent } from './modals/confirm-dialog/confirm-dialog.component';
+import { SpotifyLoginComponent } from './spotify/spotify-login/spotify-login.component';
 
 @NgModule({
   declarations: [
@@ -59,6 +60,7 @@ import { ConfirmDialogComponent } from './modals/confirm-dialog/confirm-dialog.c
     PhotoManagementComponent,
     RolesModalComponent,
     ConfirmDialogComponent,
+    SpotifyLoginComponent,
   ],
   imports: [
     BrowserModule,

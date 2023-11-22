@@ -14,6 +14,8 @@ import { preventUnsavedChangesGuard } from './_guards/prevent-unsaved-changes.gu
 import { memberDetailedResolver } from './_resolvers/member-detailed.resolver';
 import { AdminPanelComponent } from './admin/admin-panel/admin-panel.component';
 import { adminGuard } from './_guards/admin.guard';
+import { SpotifyLoginComponent } from './spotify/spotify-login/spotify-login.component';
+import { CallbackComponent } from './spotify/callback-component/callback-component.component';
 
 
 //This is the array of routes that we pass to those using the RouterModule
@@ -31,7 +33,12 @@ const routes: Routes = [
       {path: 'lists', component: ListsComponent},
       {path: 'messages', component: MessagesComponent},
       {path: 'admin', component: AdminPanelComponent, canActivate: [adminGuard]},
-      
+
+
+      //spotify stuff
+      { path: 'spotifylogin', component: SpotifyLoginComponent },
+      { path: 'callback', component: CallbackComponent }
+    
 
     ]
   },
