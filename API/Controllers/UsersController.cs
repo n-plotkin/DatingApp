@@ -34,12 +34,8 @@ namespace API.Controllers
         //route is http:url./users/
         public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery]UserParams userParams)
         {
-            var gender = await _uow.UserRepository.GetUserGender(User.GetUsername());
-
+            Console.WriteLine($"TYPEOF {userParams}");
             userParams.CurentUsername = User.GetUsername();
-
-            userParams.Gender = gender == "male" ? "female" : "male";
-
             var users = await _uow.UserRepository.GetMembersAsync(userParams);
 
             Response.AddPaginationHeader(new PaginationHeader(users.CurrentPage, users.PageSize, 

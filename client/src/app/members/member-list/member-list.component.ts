@@ -17,7 +17,7 @@ export class MemberListComponent {
   members: Member[] = [];
   pagination: Pagination | undefined;
   userParams: UserParams | undefined;
-  genderList = [{ value: 'male', display: 'Men' }, { value: 'female', display: 'Women' }]
+  typeList = [{ value: 'song', display: 'Currently Listening' }, { value: 'artist', display: 'Top Artist' }]
 
   constructor(private memberService: MembersService) {
     this.userParams = this.memberService.getUserParams();

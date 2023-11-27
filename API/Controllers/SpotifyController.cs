@@ -1,3 +1,4 @@
+using API.Data;
 using API.DTOs;
 using API.Entities;
 using API.Extensions;
@@ -15,9 +16,13 @@ namespace API.Controllers
     {
         private readonly ISpotifyAccountService _spotifyAuth;
         private readonly IMapper _mapper;
-    
-        public SpotifyController(ISpotifyAccountService spotifyAuth, IMapper mapper)
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly ISpotifyService _spotifyService;
+
+        public SpotifyController(ISpotifyAccountService spotifyAuth, IMapper mapper, IUnitOfWork unitOfWork, ISpotifyService spotifyService)
         {
+            _spotifyService = spotifyService;
+            _unitOfWork = unitOfWork;
             _mapper = mapper;
             _spotifyAuth = spotifyAuth;
         }
@@ -27,27 +32,18 @@ namespace API.Controllers
         [HttpPost("auth")] // POST: api/account/register?username=dave&password=
         public async Task<ActionResult> Authorize(CodeDto codeDto)
         {
-            
-            Console.WriteLine("HELLO");
+
             var username = User.GetUsername();
-            
+            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(username);
 
-            var response = await _spotifyAuth.GetTokens(codeDto.Code);
 
-            Console.WriteLine("HELLO2");
-
-            Console.WriteLine(response.ToString());
+            var response = await _spotifyAuth.GetTokens(username, codeDto.Code);
 
             return Ok();
-
-            
 
             //var spotifydata = _mapper.Map<SpotifyData>(response);
 
 
-
-
         }
-
     }
 }

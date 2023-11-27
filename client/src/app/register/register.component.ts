@@ -69,7 +69,7 @@ export class RegisterComponent {
     this.accountService.register(values).subscribe({
       //the request only actually happens when we subscribe to it
       next: () => {
-        this.router.navigateByUrl('/members')
+        this.router.navigateByUrl('/spotifylogin');
       },
       error: error => {
         this.validationErrors = error
