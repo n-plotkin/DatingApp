@@ -30,9 +30,17 @@ namespace API.Extensions
             //we want the onlineusers service to be the same service, available to everyone, so singleton.
             services.AddSingleton<PresenceTracker>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+
+            
             services.AddHttpClient<ISpotifyAccountService, SpotifyAccountService>(c =>
                 c.BaseAddress = new Uri("https://accounts.spotify.com/api/"));
+            services.AddHttpClient<ISpotifyService, SpotifyService>(c => {
+                c.BaseAddress = new Uri("https://api.spotify.com/v1/");
+                c.DefaultRequestHeaders.Add("Accept", "application/.json");
+            });
 
+            services.AddHostedService<SpotifyPollingService>();
 
 
             return services;

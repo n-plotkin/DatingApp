@@ -3,6 +3,7 @@ using System;
 using API.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace API.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20231127191211_SpotifyFix")]
+    partial class SpotifyFix
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "7.0.9");
@@ -260,10 +263,10 @@ namespace API.Data.Migrations
                     b.Property<string>("AppUserUserName")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("CurrentArtists")
+                    b.Property<string>("CurrentArtist")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("CurrentArtistsUris")
+                    b.Property<string>("CurrentArtistUri")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("CurrentSong")

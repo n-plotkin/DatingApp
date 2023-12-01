@@ -35,18 +35,97 @@ namespace API.Data
                 .SingleOrDefaultAsync();
         }
 
+        public async Task UpdateSpotifyData(SpotifyData spotifyData)
+        {
+            var user = await _context.Users
+                         .Include(u => u.UserSpotifyData)
+                         .FirstOrDefaultAsync(u => u.Id == spotifyData.AppUserId);
+
+            if (user == null)
+            {
+                // Handle the case where the user is not found
+                throw new InvalidOperationException("User not found.");
+            }
+
+            if (user.UserSpotifyData != null)
+            {
+                // If the user already has SpotifyData, update it
+                _context.Entry(user.UserSpotifyData).CurrentValues.SetValues(spotifyData);
+            }
+            else
+            {
+                // If the user does not have SpotifyData, add it
+                user.UserSpotifyData = spotifyData;
+            }
+
+            // Save changes in the context
+            await _context.SaveChangesAsync();
+
+        }
+        public async Task UpdateCurrentlyPlaying(string username, CurrentlyPlaying currentlyPlaying)
+        {
+            var user = await _context.Users
+                         .Include(u => u.UserSpotifyData)
+                         .FirstOrDefaultAsync(u => u.UserName == username);
+
+            if (user == null)
+            {
+                // Handle the case where the user is not found
+                throw new InvalidOperationException("User not found.");
+            }
+
+            if (user.UserSpotifyData != null)
+            {
+                user.UserSpotifyData.CurrentSong = currentlyPlaying.CurrentSong;
+                user.UserSpotifyData.CurrentSongUri = currentlyPlaying.CurrentSongUri;
+                user.UserSpotifyData.CurrentArtists = currentlyPlaying.CurrentArtists;
+                user.UserSpotifyData.CurrentArtistsUris = currentlyPlaying.CurrentArtistsUris;
+            }
+
+            // Save changes in the context
+            await _context.SaveChangesAsync();
+
+        }
+
+
+
+
+
         public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
         {
             var query = _context.Users.AsQueryable();
 
             query = query.Where(u => u.UserName != userParams.CurentUsername);
-            query = query.Where(u => u.Gender == userParams.Gender);
+            query = query.Include(s => s.UserSpotifyData);
 
-            var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MaxAge - 1));
-            var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MinAge));
+            var currentuser = await _context.Users
+                .Include(u => u.UserSpotifyData)
+                .FirstOrDefaultAsync(u => u.UserName == userParams.CurentUsername);
+
+            if (currentuser?.UserSpotifyData != null)
+            {
+                if (userParams.TypeOf == "song")
+                {
+                    query = query.Where(u => u.UserSpotifyData != null &&
+                                             u.UserSpotifyData.CurrentSongUri == currentuser.UserSpotifyData.CurrentSongUri);
+                }
+                else
+                {
+                    query = query.Where(u => u.UserSpotifyData != null &&
+                                             u.UserSpotifyData.TopArtist == currentuser.UserSpotifyData.TopArtist);
+                }
+            }
+            else
+            {
+                return await PagedList<MemberDto>.CreateAsync(Enumerable.Empty<MemberDto>().AsQueryable(), userParams.PageNumber, userParams.PageSize);
+            }
 
 
-            query = query.Where(u => u.DateOfBirth >= minDob && u.DateOfBirth <= maxDob);
+            //var minDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MaxAge - 1));
+            //var maxDob = DateOnly.FromDateTime(DateTime.Today.AddYears(-userParams.MinAge));
+
+
+            //query = query.Where(u => u.DateOfBirth >= minDob && u.DateOfBirth <= maxDob);
 
             query = userParams.OrderBy switch
             {
@@ -56,7 +135,7 @@ namespace API.Data
 
             return await PagedList<MemberDto>.CreateAsync(
             query.AsNoTracking().ProjectTo<MemberDto>(_mapper.ConfigurationProvider),
-            userParams.PageNumber, 
+            userParams.PageNumber,
             userParams.PageSize);
         }
 
@@ -64,6 +143,8 @@ namespace API.Data
         {
             return await _context.Users.FindAsync(id);
         }
+
+
 
         public async Task<AppUser> GetUserByUsernameAsync(string username)
         {
@@ -73,8 +154,17 @@ namespace API.Data
 
             return await _context.Users
             .Include(p => p.Photos)
+            .Include(s => s.UserSpotifyData)
             .SingleOrDefaultAsync(x => x.UserName == username);
         }
+
+        public async Task<AppUser> GetUserByAccessToken(string accessToken)
+        {
+            return await _context.Users
+            .Include(s => s.UserSpotifyData)
+            .SingleOrDefaultAsync(x => x.UserSpotifyData.AccessToken == accessToken);
+        }
+
 
         public async Task<string> GetUserGender(string username)
         {

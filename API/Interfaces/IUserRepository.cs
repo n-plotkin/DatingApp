@@ -10,6 +10,11 @@ namespace API.Interfaces
         Task<IEnumerable<AppUser>> GetUsersAsync();
         Task<AppUser> GetUserByIdAsync(int id);
         Task<AppUser> GetUserByUsernameAsync(string username);
+        Task<AppUser> GetUserByAccessToken(string accessToken);
+
+        Task UpdateSpotifyData(SpotifyData spotifyData);
+        Task UpdateCurrentlyPlaying(string username, CurrentlyPlaying currentlyPlaying);
+
 
         Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams);
         Task<MemberDto> GetMemberAsync(string username);

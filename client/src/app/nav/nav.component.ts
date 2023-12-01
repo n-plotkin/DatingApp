@@ -42,7 +42,7 @@ export class NavComponent implements OnInit{
     //subscribe to the observable
     this.accountService.login(this.model).subscribe({
         next: _ => {
-          this.router.navigateByUrl('/members');
+          this.router.navigateByUrl('/spotifylogin');
           this.model = {};
         }
     })
