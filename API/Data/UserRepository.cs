@@ -102,12 +102,11 @@ namespace API.Data
                 .Include(u => u.UserSpotifyData)
                 .FirstOrDefaultAsync(u => u.UserName == userParams.CurentUsername);
 
-            if (currentuser?.UserSpotifyData != null)
+            if (currentuser?.UserSpotifyData.CurrentSong != null)
             {
                 if (userParams.TypeOf == "song")
                 {
-                    query = query.Where(u => u.UserSpotifyData != null &&
-                                             u.UserSpotifyData.CurrentSongUri == currentuser.UserSpotifyData.CurrentSongUri);
+                    query = query.Where(u =>  u.UserSpotifyData.CurrentSongUri == currentuser.UserSpotifyData.CurrentSongUri);
                 }
                 else
                 {
@@ -117,7 +116,8 @@ namespace API.Data
             }
             else
             {
-                return await PagedList<MemberDto>.CreateAsync(Enumerable.Empty<MemberDto>().AsQueryable(), userParams.PageNumber, userParams.PageSize);
+                Console.WriteLine("Got to getmembersasync empty");
+                return null; 
             }
 
 

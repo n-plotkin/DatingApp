@@ -113,8 +113,7 @@ public class SpotifyPollingService : BackgroundService
                             else
                             {
                                 Console.WriteLine("User not connected.");
-                            }
-;
+                            };
 
 
 
