@@ -47,8 +47,7 @@ namespace API.SignalR
                     }
                     else
                     {
-                        OnlineUsers.Add(username, new UserPresence { User = appuser });
-                        OnlineUsers[username].ConnectionIds.Add(connectionid);
+                        OnlineUsers.Add(username, new UserPresence { ConnectionIds = { connectionid }, User = appuser });
 
                         isOnlineChanged = true;
                     }
@@ -134,15 +133,16 @@ namespace API.SignalR
 
         public static Task<List<string>> GetConnectionsForUser(string username)
         {
-            List<string> connectionIds;
+            List<string> connectionIds = new List<string>();
 
-            //To make this scalable we will have to turn this into database rather than our dictionary in memory
-            lock (OnlineUsers)
+            // Safely check if the username exists and only then access ConnectionIds
+            if (OnlineUsers.TryGetValue(username, out var userPresence) && userPresence != null)
             {
-                connectionIds = OnlineUsers.GetValueOrDefault(username).ConnectionIds;
+                connectionIds = userPresence.ConnectionIds;
             }
 
             return Task.FromResult(connectionIds);
+
         }
 
         public Task<Dictionary<string, UserPresence>> GetOnlineUsersWithPresence()

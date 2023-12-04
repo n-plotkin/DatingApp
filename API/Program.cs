@@ -39,6 +39,8 @@ app.MapControllers();
 
 app.MapHub<PresenceHub>("hubs/presence");
 app.MapHub<MessageHub>("hubs/message");
+app.MapHub<SpotifyHub>("hubs/spotify");
+
 
 //gives us access to all services in program
 using var scope = app.Services.CreateScope();

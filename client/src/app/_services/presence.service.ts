@@ -5,6 +5,7 @@ import { environment } from 'src/environments/environment';
 import { User } from '../_models/user';
 import { BehaviorSubject, take } from 'rxjs';
 import { Router } from '@angular/router';
+import { SpotifyService } from './spotify.service';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +18,8 @@ export class PresenceService {
   onlineUsers$ = this.onlineUsersSource.asObservable();
 
 
-  constructor(private toastr: ToastrService, private router: Router) { 
-
+  constructor(private toastr: ToastrService, private router: Router,
+      private spotifyService: SpotifyService) { 
   }
 
 

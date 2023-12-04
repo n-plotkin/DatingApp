@@ -32,7 +32,7 @@ export class MessageService {
     this.hubConnection.start().catch(error => console.log(error));
 
     this.hubConnection.on('ReceiveMessageThread', messages => {
-      this.messageThreadSource.next(messages);
+      this.messageThreadSource.next(messages.reverse());
     });
 
     //we do this to update the client according to what was already done on server side

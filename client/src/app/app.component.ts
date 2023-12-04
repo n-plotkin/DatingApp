@@ -8,7 +8,7 @@ import { User } from './_models/user';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'Dating App';
+  title = 'Serendipity';
 
   constructor(private accountService: AccountService){}
 

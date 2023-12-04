@@ -42,8 +42,35 @@ namespace API.Controllers
             return Ok();
 
             //var spotifydata = _mapper.Map<SpotifyData>(response);
+        }
+
+        [HttpGet("me")] // POST: api/spotify/me
+        public async Task<ActionResult<String[]>> GetCurrentSpotifyData()
+        {
+
+            var username = User.GetUsername();
+            var user = await _unitOfWork.UserRepository.GetUserByUsernameAsync(username);
+
+            var response = new string[] {};
+            if (user.UserSpotifyData != null)
+            {
+                response = new string[] 
+                    {
+                        user.UserSpotifyData.TopArtist,
+                        user.UserSpotifyData.TopArtistImageUri,
+                        user.UserSpotifyData.CurrentArtists,
+                        user.UserSpotifyData.CurrentArtistsUris, 
+                        user.UserSpotifyData.CurrentSong, 
+                        user.UserSpotifyData.CurrentSongUri, 
+                    };
+            }
+
+            return Ok(response);
+
+            //var spotifydata = _mapper.Map<SpotifyData>(response);
 
 
         }
+
     }
 }

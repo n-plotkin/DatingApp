@@ -31,6 +31,9 @@
 .btn-colored{
     background-color:pink;
     border-color: aliceblue;
+    font-size: 0.75em; /* Smaller font size */
+    padding: 5px 10px; /* Smaller padding */
+
 
 }
 .btn-colored:hover{

@@ -4,8 +4,10 @@ import { Member } from 'src/app/_models/member';
 import { Pagination } from 'src/app/_models/pagination';
 import { User } from 'src/app/_models/user';
 import { UserParams } from 'src/app/_models/userParams';
+import { userSpotifyData } from 'src/app/_models/userSpotifyData';
 import { AccountService } from 'src/app/_services/account.service';
 import { MembersService } from 'src/app/_services/members.service';
+import { SpotifyService } from 'src/app/_services/spotify.service';
 
 @Component({
   selector: 'app-member-list',
@@ -18,14 +20,35 @@ export class MemberListComponent {
   pagination: Pagination | undefined;
   userParams: UserParams | undefined;
   typeList = [{ value: 'song', display: 'Currently Listening' }, { value: 'artist', display: 'Top Artist' }]
+  spotifyInfo?: userSpotifyData | null;
 
-  constructor(private memberService: MembersService) {
-    this.userParams = this.memberService.getUserParams();
+  constructor(private memberService: MembersService,
+    private spotifyService: SpotifyService) {
+      this.userParams = this.memberService.getUserParams();
   }
 
   ngOnInit() {
     //this.members$ = this.memberService.getMembers();
+    this.setupSpotifySubscription();
+    this.loadSpotify();
     this.loadMembers();
+  }
+
+
+  setupSpotifySubscription() {
+    this.spotifyService.currentSong$.subscribe({
+      next: (response) => {
+        this.spotifyInfo = response;
+        if (this.userParams != null && this.userParams.typeof == "song"){
+          this.loadMembers();
+        }
+      },
+      error: (err) => console.error('Error updating Spotify info:', err),
+    });
+  }
+
+  loadSpotify(){
+    this.spotifyService.getCurrentData();
   }
 
   loadMembers() {
@@ -48,7 +71,6 @@ export class MemberListComponent {
     if (reset){
       this.userParams = reset[0];
       this.pagination = reset[1];
-
     }
     this.loadMembers();
   }
@@ -58,6 +80,7 @@ export class MemberListComponent {
       this.userParams.pageNumber = event.page;
       this.memberService.setUserParams(this.userParams);
       this.loadMembers();
+      this.loadSpotify();
     }
   }
 }

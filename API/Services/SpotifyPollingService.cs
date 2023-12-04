@@ -9,6 +9,7 @@ using API.Services;
 using API.Entities;
 using API.Helpers;
 using System.Text.Json;
+using API.Helpers.Song;
 
 public class SpotifyPollingService : BackgroundService
 {
@@ -33,14 +34,22 @@ public class SpotifyPollingService : BackgroundService
     private readonly IServiceProvider _serviceProvider;
     private readonly ISpotifyAccountService _spotifyAccountService;
 
+    private readonly IHubContext<SpotifyHub> _spotifyHubContext;
+    private readonly IHubContext<PresenceHub> _presenceHub;
+
+
     public SpotifyPollingService(PresenceTracker presenceTracker,
      ISpotifyService spotifyService, IServiceProvider serviceProvider,
-     ISpotifyAccountService spotifyAccountService)
+     ISpotifyAccountService spotifyAccountService,
+     IHubContext<SpotifyHub> spotifyHubContext,
+     IHubContext<PresenceHub> presenceHub)
     {
+        _spotifyHubContext = spotifyHubContext;
         _spotifyAccountService = spotifyAccountService;
         _serviceProvider = serviceProvider;
         _spotifyService = spotifyService;
         _presenceTracker = presenceTracker;
+        _presenceHub = presenceHub;
 
     }
 
@@ -60,7 +69,7 @@ public class SpotifyPollingService : BackgroundService
 
                 Console.WriteLine($"Hello {user.UserSpotifyData == null}!");
 
-                
+
                 if (user.UserSpotifyData != null)
                 {
 
@@ -77,7 +86,7 @@ public class SpotifyPollingService : BackgroundService
                     {
                         var currentartists = JsonSerializer.Serialize(currentlyPlaying.item.artists.Select(artist => artist.name).ToList());
                         if (currentlyPlaying.item.name != user.UserSpotifyData.CurrentSong
-                            && currentartists != user.UserSpotifyData.CurrentArtists
+                            || currentartists != user.UserSpotifyData.CurrentArtists
                             ) // Check if there's a song playing and if it's a different song
                         {
                             //update user
@@ -86,9 +95,26 @@ public class SpotifyPollingService : BackgroundService
                                 CurrentArtists = currentartists,
                                 CurrentArtistsUris = JsonSerializer.Serialize(currentlyPlaying.item.artists.Select(artist => artist.uri).ToList()),
                                 CurrentSong = currentlyPlaying.item.name,
-                                CurrentSongUri = currentlyPlaying.item.uri
+                                CurrentSongUri = currentlyPlaying.item.album.images.FirstOrDefault().url
                             };
                             Console.WriteLine($"CurrentlyplayingParameters: {currentlyPlayingParameters.CurrentArtists.ToString()}");
+
+                            Console.WriteLine("Sending to receiveSongUpdate");
+                            Console.WriteLine("");
+
+
+                            var username = u.Value.User.UserName; ;
+                            if (SpotifyHub.UserConnectionMap.TryGetValue(username, out var connectionId))
+                            {
+                                //Find a better way of doing this..?
+                                await _spotifyHubContext.Clients.All.SendAsync("receiveSongUpdate", "Updated.");
+                                Console.WriteLine("Sent to receiveSongUpdate");
+                            }
+                            else
+                            {
+                                Console.WriteLine("User not connected.");
+                            }
+;
 
 
 

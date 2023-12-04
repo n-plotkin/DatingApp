@@ -5,6 +5,7 @@ import { User } from '../_models/user';
 import { BehaviorSubject, take } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { PresenceService } from './presence.service';
+import { SpotifyService } from './spotify.service';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +24,8 @@ export class AccountService {
   // $ convention to indicate observable
   currentUser$ = this.currentUserSource.asObservable();
 
-  constructor(private http: HttpClient, private presenceService: PresenceService) { 
+  constructor(private http: HttpClient, private presenceService: PresenceService, 
+      private spotifyService: SpotifyService) { 
   }
 
   login(model: any){
@@ -58,6 +60,7 @@ export class AccountService {
     this.currentUserSource.next(user);
 
     this.presenceService.createHubConnection(user);
+    this.spotifyService.createHubConnection(user);
   }
 
   logout(){

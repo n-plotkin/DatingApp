@@ -1,64 +1,69 @@
-<div class="text-center mt-3">
-    <h2>Your results - {{pagination?.totalItems}} found.</h2>
-</div>
-
-<div class="container mt-3" *ngIf="userParams">
-    <form #form="ngForm" class="d-flex mb-3" (ngSubmit)="loadMembers()" autocomplete="off">
-        <div class="d-flex mx-2">
-            <label class="col-form-label">Show: </label>
-            <select 
-                class="form-select ml-1" 
-                style="width: 180px" 
-                name="typeof"
-                [(ngModel)]="userParams.typeof">
-                <option *ngFor="let type of typeList" [value]="type.value">
-                    {{type.display}}
-                </option>
-            </select>
-        </div>
-        <button class="btn btn-primary ms-1" type="submit">Apply Filters</button>
-        <button (click)="resetFilters()" class="btn btn-primary ms-1" type="submit">Reset Filters</button>
-        
-        <div class="col">
-            <div class="btn-group float-end">
-                <button 
-                type="button"
-                class="btn btn-primary" 
-                name="orderBy"
-                [(ngModel)]="userParams.orderBy"
-                btnRadio="lastActive"
-                (click)="loadMembers()">Last Active</button>
-                <button 
-                type="button"
-                class="btn btn-primary" 
-                name="orderBy"
-                [(ngModel)]="userParams.orderBy"
-                btnRadio="created"
-                (click)="loadMembers()">Newest members</button>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-3">
+            <!-- Spotify Info -->
+            <div class="card mx-auto mt-3" style="">
+                <img *ngIf="spotifyInfo?.songUri" [src]="spotifyInfo?.songUri" class="card-img-top" alt="Song Image"
+                    style="object-fit: cover; height: fit;">
+                <div class="card-body">
+                    <h3 class="card-title">Now Playing</h3>
+                    <h5 class="card-text">{{spotifyInfo?.song}}</h5>
+                    <p class="card-text" *ngIf="spotifyInfo?.currentArtists">
+                        <span *ngFor="let artist of spotifyInfo?.currentArtists; let i = index">
+                            {{ artist }}.
+                        </span>
+                </div>
             </div>
-            
         </div>
 
-    </form>
-</div>
+        <div class="col-9">
+            <div class="text-center mt-3">
+                <h2>You're tuned in - {{pagination?.totalItems}} kindred spirits found.</h2>
+            </div>
 
-<div class="row">
-    <div class="col-2" *ngFor="let member of members">
-        <app-member-card [member]="member"></app-member-card>
+            <div class="container mt-3" *ngIf="userParams">
+                <form #form="ngForm" class="d-flex mb-3" (ngSubmit)="loadMembers()" autocomplete="off">
+                    <div class="d-flex mx-2">
+                        <label class="col-form-label">Show: </label>
+                        <select class="form-select ml-1" style="width: 200px" name="typeof"
+                            [(ngModel)]="userParams.typeof">
+                            <option *ngFor="let type of typeList" [value]="type.value">
+                                {{type.display}}
+                            </option>
+                        </select>
+                    </div>
+                    <button class="btn btn-primary ms-1" type="submit">Apply Filters</button>
+                    <button (click)="resetFilters()" class="btn btn-primary ms-1" type="submit">Reset Filters</button>
+
+                    <div class="col">
+                        <div class="btn-group float-end">
+                            <button type="button" class="btn btn-primary" name="orderBy"
+                                [(ngModel)]="userParams.orderBy" btnRadio="lastActive" (click)="loadMembers()">Last
+                                Active</button>
+                            <button type="button" class="btn btn-primary" name="orderBy"
+                                [(ngModel)]="userParams.orderBy" btnRadio="created" (click)="loadMembers()">Newest
+                                members</button>
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+
+
+            <div class="row">
+                <div class="col-2" *ngFor="let member of members">
+                    <app-member-card [member]="member"></app-member-card>
+                </div>
+            </div>
+
+
+            <div class="d-flex justify-content-center" *ngIf="pagination">
+                <pagination [boundaryLinks]="true" [totalItems]="pagination.totalItems"
+                    [itemsPerPage]="pagination.itemsPerPage" [maxSize]="10" [(ngModel)]="pagination.currentPage"
+                    (pageChanged)="pageChanged($event);" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;"
+                    lastText="&raquo;">
+                </pagination>
+            </div>
+        </div>
     </div>
-</div>
-
-<div class="d-flex justify-content-center" *ngIf="pagination">
-    <pagination 
-        [boundaryLinks]="true" 
-        [totalItems]="pagination.totalItems"
-        [itemsPerPage]="pagination.itemsPerPage" 
-        [maxSize]="10"
-        [(ngModel)]="pagination.currentPage"
-        (pageChanged)="pageChanged($event);"
-        previousText="&lsaquo;"    
-        nextText="&rsaquo;" 
-        firstText="&laquo;" 
-        lastText="&raquo;">
-    </pagination>
-</div>

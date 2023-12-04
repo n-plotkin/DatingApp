@@ -34,7 +34,6 @@ namespace API.Controllers
         //route is http:url./users/
         public async Task<ActionResult<PagedList<MemberDto>>> GetUsers([FromQuery]UserParams userParams)
         {
-            Console.WriteLine($"TYPEOF {userParams}");
             userParams.CurentUsername = User.GetUsername();
             var users = await _uow.UserRepository.GetMembersAsync(userParams);
 
