@@ -36,3 +36,10 @@ Serendipity is a social media platform designed for Spotify users. Serendipity c
 **• Hosting:** Fly.io for cloud-based hosting.
 
 **• Database:** PostgreSQL for data management.
+
+
+## Known Issues:
+**Spotify Users:** Until Spotify grants Serendipity full deployment, it remains in development mode. To use the app, email the email address associated with your Spotify account to noahplotkin1@gmail.com to be added to the allowed users list, which will allow you to log in with Spotify.
+
+**Bootstrap Datepicker:** The Bootstrap datepicker lists extra nonsensical dates alongside the left hand column of dates in the datepicker.
+
