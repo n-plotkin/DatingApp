@@ -1,5 +1,6 @@
 # Serendipity
 https://serendipity.fly.dev/
+
 Serendipity is a social media platform designed for Spotify users. Serendipity connect connects users with other users listening to the same song. Users can view each other's profiles, follow, and message in real-time. The following is a brief outline of the main technologies used.
 
 
