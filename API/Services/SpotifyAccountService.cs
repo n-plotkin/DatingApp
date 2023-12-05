@@ -156,7 +156,7 @@ namespace API.Services
 
                 spotifyData.TopArtist = artist.items.FirstOrDefault().name;
                 spotifyData.TopArtistImageUri = artist.items.FirstOrDefault().images.FirstOrDefault().url;
-                
+
                 var currentlyPlaying = await _spotifyService.GetCurrentlyPlayingTrack(spotifyData.AccessToken);
                 if (currentlyPlaying != null)
                 {

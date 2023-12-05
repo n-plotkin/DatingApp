@@ -9,7 +9,8 @@ import { HttpClient } from '@angular/common/http';
   providedIn: 'root'
 })
 export class SpotifyOAuthService {
-  private redirectUri = 'https://localhost:4200/callback'; // Your redirect URI
+  //private redirectUri = 'https://localhost:4200/callback'; // Your redirect URI
+  private redirectUri = 'http://localhost:8080/callback';
   private scope =
     'user-read-private user-read-email ' +
     'user-read-recently-played ' +

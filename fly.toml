@@ -1,0 +1,32 @@
+# fly.toml app configuration file generated for serendipity on 2023-12-05T00:49:00-05:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "serendipity"
+
+primary_region = "ewr"
+
+
+[build]
+  image = "noahplotkin1/serendipity:latest"
+
+[env]
+  ASPNETCORE_URLS="http://+:8080"
+  CloudinarySettings__CloudName="dgm1isptu"
+  CloudinarySettings__ApiKey="493286484792834"
+  SpotifySettings__ClientId="265038f60c6044139b1f77f14484ca11"
+  SpotifySettings__CallbackUrl="http://localhost:8080/callback"
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ["app"]
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 1
+  memory_mb = 1024
