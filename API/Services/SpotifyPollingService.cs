@@ -62,12 +62,10 @@ public class SpotifyPollingService : BackgroundService
 
             foreach (var u in onlineUsers)
             {
-                Console.WriteLine($"Hello {u.Value.User.UserName}!");
+                Console.WriteLine($"Polling {u.Value.User.UserName}");
                 var user = await _presenceTracker.UpdateUser(u.Value.User.UserName);
-                Console.WriteLine($"Got here?");
 
 
-                Console.WriteLine($"Hello {user.UserSpotifyData == null}!");
 
 
                 if (user.UserSpotifyData != null)
@@ -80,7 +78,6 @@ public class SpotifyPollingService : BackgroundService
                     }
                     Console.WriteLine($"NEW NOW: {DateTime.UtcNow}, EXPIRES: {user.UserSpotifyData.ExpiresAt}");
 
-                    Console.WriteLine($"TOKEN: {user.UserSpotifyData.AccessToken}");
                     var currentlyPlaying = await _spotifyService.GetCurrentlyPlayingTrack(user.UserSpotifyData.AccessToken);
                     if (currentlyPlaying != null)
                     {
@@ -99,8 +96,6 @@ public class SpotifyPollingService : BackgroundService
                             };
                             Console.WriteLine($"CurrentlyplayingParameters: {currentlyPlayingParameters.CurrentArtists.ToString()}");
 
-                            Console.WriteLine("Sending to receiveSongUpdate");
-                            Console.WriteLine("");
 
 
                             var username = u.Value.User.UserName; ;
@@ -133,8 +128,6 @@ public class SpotifyPollingService : BackgroundService
                     }
                     else
                     {
-                        Console.WriteLine("Got to else");
-
                         using (var scope = _serviceProvider.CreateScope())
                         {
                             var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();

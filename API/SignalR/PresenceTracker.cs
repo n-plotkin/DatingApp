@@ -63,14 +63,11 @@ namespace API.SignalR
         {
 
             var appuser = new AppUser();
-            Console.WriteLine($"Update user called on {username}...");
-            Console.WriteLine($"Does online users contain username? {OnlineUsers.ContainsKey(username)}");
 
 
             using (var scope = _serviceProvider.CreateScope())
             {
                 var unitOfWork = scope.ServiceProvider.GetRequiredService<IUnitOfWork>();
-                Console.WriteLine($"Got inside scope");
 
                 // Use unitOfWork here for database operations
 
@@ -78,17 +75,14 @@ namespace API.SignalR
 
                 if (OnlineUsers.ContainsKey(username))
                 {
-                    Console.WriteLine($"Got inside containskey");
 
                     appuser = await unitOfWork.UserRepository.GetUserByUsernameAsync(username);
-                    Console.WriteLine($"appuser {appuser.UserName} has spotifydata = {appuser.UserSpotifyData}");
 
                     //dictionary is not threadsafe, so multiple concurrent accesses would be bad
                     if (appuser.UserSpotifyData != OnlineUsers.GetValueOrDefault(username).User.UserSpotifyData)
                     {
                         lock (OnlineUsers)
                         {
-                            Console.WriteLine($"Got inside lock?");
                             var connectionIds = OnlineUsers.GetValueOrDefault(username).ConnectionIds;
 
                             OnlineUsers.Remove(username);

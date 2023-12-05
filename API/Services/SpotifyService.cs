@@ -44,7 +44,6 @@ namespace API.Services
 
         public async Task<Helpers.Song.Song> GetCurrentlyPlayingTrack(string accessToken)
         {
-            Console.WriteLine($"TOKEN IN SPOTIFYSERVICE: {accessToken}");
 
             var request = new HttpRequestMessage(HttpMethod.Get, "me/player/currently-playing?market=ES");
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
@@ -70,7 +69,6 @@ namespace API.Services
             using var responseStream = await response.Content.ReadAsStreamAsync();
             var responseObject = await JsonSerializer.DeserializeAsync<Song>(responseStream);
 
-            Console.WriteLine($"LOOK HERE {responseObject.item.name}");
             return responseObject;
         }
     }
